@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ $# -ne 7 ];
+	then echo "Incomplete number of parameters
+Syntax: sudo ./watcher [YYYY] [MM] [DD] [HH] [mm] [ss] [keyword]
+Example: sudo ./watcher 2015 04 13 15 30 00 nginx"
+	exit	
+fi
+
+KEYWORD=${7}
+KEYWORD_COUNT=${#7}
+FIRST_LETTER=${KEYWORD:0:1}
+OTHER_LETTERS=${KEYWORD:1:${KEYWORD_COUNT}}
+SEARCH_KEYWORD="[${FIRST_LETTER}]${OTHER_LETTERS}"
+
+END_DATE=$(date -d "${1}-${2}-${3} ${4}:${5}:${6}" +%s)
+CURRENT_DATE=$(date +%s)
+
+while [ "$END_DATE" -ge $(date +%s) ]
+	do
+	echo "$(date) : $(ps aux | grep -v watcher | grep -c $SEARCH_KEYWORD) total count"
+	sleep 1
+done
+
+#args=("$@")
+#ELEMENTS=${#args[@]}
+
+#for ((i=0;i<$ELEMENTS;i++)); do
+#	echo ${args[${i}]}
+#done
